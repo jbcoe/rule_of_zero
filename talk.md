@@ -523,7 +523,7 @@ public:
 };
 ``` 
 
-Compiler-generated special memebr functions will behave correctly and 
+Compiler-generated special member functions will behave correctly and 
 `const` will propagate to each and every node.
 
 ---
@@ -545,7 +545,7 @@ class Zoo {
 }; 
 ``` 
 
-Compiler-generated special memebr functions will behave correctly and 
+Compiler-generated special member functions will behave correctly and 
 `const` will propagate to each and every animal.
 
 ---
