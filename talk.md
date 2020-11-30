@@ -344,6 +344,10 @@ If a class has ownership logic that requires user-specified special member
 functions, then all it should do is control ownership of and access to its 
 members. 
 
+Similarly, if a class encapsualtes some business logic then it should not 
+concern itself with ownership and access-management of data but should 
+defer that responsibility to the types it is composed from.
+
 ---
 
 ## Values and references
@@ -498,6 +502,51 @@ class TypeErasedWriter {
     void Write() { writer_.Write(); }
 };
 ```
+
+---
+
+## Examples - `indirect_value`
+
+We can use `indirect_value` in any context where we need a class to own
+non-polymorphic data of incomplete type. For example:
+
+```~cpp
+class ForwardListNode {
+    int data_;
+    std::indirect_value<ForwardListNode> next_;
+}; 
+
+class ForwardList {
+    std::indirect_value<ForwardListNode> head_;
+public:
+    // ...
+};
+``` 
+
+Compiler-generated special memebr functions will behave correctly and 
+`const` will propagate to each and every node.
+
+---
+
+## Examples - `polymorphic_value`
+
+We can use `polymorphic_value` in any context where we need a class to own
+open-set runtime-polymorphic data. For example:
+
+```~cpp
+struct Animal {
+    virtual ~Animal();
+    virtual const char* MakeNoise() const = 0;
+};
+
+class Zoo {
+    std::vector<std::polymorphic_value<Animal>> animals_;
+    // ...
+}; 
+``` 
+
+Compiler-generated special memebr functions will behave correctly and 
+`const` will propagate to each and every animal.
 
 ---
 
