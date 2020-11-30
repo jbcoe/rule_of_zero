@@ -286,7 +286,7 @@ at compile time.
 
 ```~cpp
 struct FileSystem {
-  virtual ~FileSystem(); // Not defaulted as we want an anchor method.
+  virtual ~FileSystem();
   virtual Write(std::string_view) = 0;
 };
 
@@ -447,19 +447,20 @@ When `indirect_value` is accessed through a `const` access path, only
 
 ## Implementing `indirect_value`
 
-Implementation of indirect value is relatively simple.
+Implementation of `indirect value` is relatively simple.
 
-The class containers a pointer-member, user-defined special member 
+The class contains a pointer-member, user-defined special member 
 functions and suitable `const`-qualified overloads for accessors.
 
 ---
 
 ## Implementing `polymorphic_value` with type-erasure
 
-Implementation of indirect value is more involved.
+Implementation of `polymorphic_value` is more involved.
 
-The class containers a pointer-member, user-defined special member 
-functions and suitable `const`-qualified overloads for accessors.
+Like `indirect value`, the class contains a pointer-member, 
+user-defined special member functions and suitable 
+`const`-qualified overloads for accessors.
 
 The class also contains a type-erased control block that is able 
 to perform correct copies of derived types.
@@ -469,7 +470,7 @@ to perform correct copies of derived types.
 ## Type erasure
 
 Type erasure uses a combination of generics and virtual dispatch
-to turn structural subtypes into an object heirarchy.
+to turn structural subtypes into an object hierarchy.
 
 ```~cpp
 class TypeErasedWriter {
