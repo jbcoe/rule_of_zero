@@ -573,7 +573,7 @@ A great many folk have contributed to discussions around the design of
 these class templates.
 
 I'd like to explicitly acknowledge the contribution of my co-authors 
-Sean Parent (at Adobe) and Antony Peacock (at Maven Capital Partners).
+Sean Parent (at Adobe) and Antony Peacock (at Maven Securities).
 
 ---
 
