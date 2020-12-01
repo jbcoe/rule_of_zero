@@ -344,8 +344,8 @@ If a class has ownership logic that requires user-specified special member
 functions, then all it should do is control ownership of and access to its 
 members. 
 
-Similarly, if a class encapsualtes some business logic then it should not 
-concern itself with ownership and access-management of data but should 
+Similarly, if a class encapsulates some business logic, then it should not 
+concern itself with ownership and access-management of data, but should 
 defer that responsibility to the types it is composed from.
 
 ---
