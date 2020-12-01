@@ -540,7 +540,7 @@ to perform correct copies of derived types.
 
 ## Type erasure
 
-Type erasure uses a combination of generics and virtual dispatch
+Type erasure uses a combination of templates and virtual dispatch
 to turn structural subtypes into an object hierarchy.
 
 Type erasure is used to implement `std::function`, `std::any` 
@@ -554,10 +554,10 @@ class TypeErasedWriter {
     }
 
     template <class T>  
-    // T needs a `Write` method but no base class.
-    struct GenericWriter : BaseWriter {
+    // T does not need to implement any interface in order to be usable as a Writer.
+    struct WriterImpl : BaseWriter {
         T t_;
-        GenericWriter(T&& t) : t_(std::move(t)) {}
+        GenericWriter(T&& t) : t_(std::forward(t)) {}
         void Write(std::string_view s) override { t_.Write(); }
     }
     
@@ -566,7 +566,7 @@ class TypeErasedWriter {
  public:
     template <class T> 
     TypeErasedWriter(T&& t) {
-        writer_ = new GenericWriter<T>(std::move(t));
+        writer_ = new GenericWriter<T>(std::forward(t));
     }
     
     void Write() { writer_.Write(); }
