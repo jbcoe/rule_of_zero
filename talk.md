@@ -554,11 +554,11 @@ class TypeErasedWriter {
     }
 
     template <class T>  
-    // T does not need to implement any interface in order to be usable as a Writer.
+    // T does not need to inherit from nor override functions from a particular base class.
     struct WriterImpl : BaseWriter {
         T t_;
         GenericWriter(T&& t) : t_(std::forward(t)) {}
-        void Write(std::string_view s) override { t_.Write(); }
+        void Write(std::string_view s) override { t_.Write(s); }
     }
     
     BaseWriter* writer_;
