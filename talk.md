@@ -1,8 +1,16 @@
+# Stop writing code, start solving problems
+
 ## Value semantics and the rule of zero in modern C++
 
 C++ has a rule of zero that suggests that users should not be writing 
-compiler-generated functions like  copy constructors, destructors and 
-assignment operations.
+compiler-generated functions like copy constructors, destructors and 
+assignment operations:
+
+_"Write your classes in a way that you do not need to declare/define 
+neither a destructor, nor a copy/move constructor or copy/move 
+assignment operator_
+
+_Use smart pointers & standard library classes for managing resources."_ 
 
 The rule is easy to state but hard to follow. I want to fix this and have 
 proposed two new class-templates `polymorphic_value` and `indirect_value` 
@@ -424,8 +432,8 @@ public:
 };
 ``` 
 
-Compiler-generated special member functions will behave correctly and 
-`const` will propagate to each and every node.
+Implicit copy, move, and destruction operations will behave correctly 
+and `const` will propagate to each and every node.
 
 ---
 
@@ -498,8 +506,8 @@ class Zoo {
 }; 
 ``` 
 
-Compiler-generated special member functions will behave correctly and 
-`const` will propagate to each and every animal.
+Implicit copy, move, and destruction operations will behave correctly
+and `const` will propagate to each and every animal.
 
 ---
 
