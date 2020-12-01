@@ -390,11 +390,18 @@ When `indirect_value` is accessed through a `const` access path, only
 ##  `indirect_value` interface
 
 ```~cpp
-  template <class T>
+  template <class T, class C = std::default_copy<T>, class D = std::default_delete<T>>
   class indirect_value {
     ~indirect_value() = default;
 
-    // Some constructors omitted
+    indirect_value() = default;
+    
+    template <class... Ts>
+    explicit indirect_value(std::in_place_t, Ts&&... ts) 
+  
+    template <class U>
+    // The type of U and T must be the same.
+    explicit indirect_value(U* u, C c = C{}, D d = D{})
 
     indirect_value(const indirect_value& p);
     indirect_value(indirect_value&& p) noexcept;
@@ -465,8 +472,15 @@ access to the held object is possible.
   template <class T>
   class polymorphic_value {
     ~polymorphic_value() = default;
-
-    // Some constructors omitted
+    
+    polymorphic_value() = default;
+    
+    template <class U, class... Ts>
+    explicit polymorphic_value(std::in_place_type_t<U>, Ts&&... ts) // Future design
+  
+    template <class U, class C = std::default_copy<U>, class D = std::default_delete<U>>
+    // U* must be convertible to T*
+    explicit polymorphic_value(U* u, C c = C{}, D d = D{})
 
     polymorphic_value(const polymorphic_value& p);
     polymorphic_value(polymorphic_value&& p) noexcept;
