@@ -362,14 +362,86 @@ Copies of standard library constainers are distinct objects. Modifications
 to a copy would not be reflected in the original.
 
 The C++ standard library is missing value-types that are suitable for storing 
-polymorphic or indirect member variables.
+(open-set-runtime-)polymorphic or indirect member variables.
+
+---
+
+## `indirect_value`
+
+The class template, `indirect_value`, confers value-like semantics on a 
+free-store (heap) allocated object. 
+
+An `indirect_value<T>` may hold an object of class `T`, copying the 
+`indirect_value` will copy the object. 
+
+When `indirect_value` is accessed through a `const` access path, only 
+`const` access to the held object is possible.
+
+---
+
+##  `indirect_value` interface
+
+```~cpp
+  template <class T>
+  class indirect_value {
+    ~indirect_value() = default;
+
+    // Some constructors omitted
+
+    indirect_value(const indirect_value& p);
+    indirect_value(indirect_value&& p) noexcept;
+
+    indirect_value& operator=(const indirect_value& p);
+    indirect_value& operator=(indirect_value&& p) noexcept;
+
+    explicit operator bool() const;
+
+    const T* operator->() const;
+    const T& operator*() const;
+
+    T* operator->();
+    T& operator*();
+  };
+```
+
+---
+
+## Examples - `indirect_value`
+
+We can use `indirect_value` in any context where we need a class to own
+non-polymorphic data of incomplete type. For example:
+
+```~cpp
+class ForwardListNode {
+    int data_;
+    std::indirect_value<ForwardListNode> next_;
+}; 
+
+class ForwardList {
+    std::indirect_value<ForwardListNode> head_;
+public:
+    // ...
+};
+``` 
+
+Compiler-generated special member functions will behave correctly and 
+`const` will propagate to each and every node.
+
+---
+
+## Implementing `indirect_value`
+
+Implementation of `indirect value` is relatively simple.
+
+The class contains a pointer-member, user-defined special member 
+functions and suitable `const`-qualified overloads for accessors.
 
 ---
 
 ## `polymorphic_value`
 
-The class template, `polymorphic_value`, confers value-like semantics on a freestore 
-allocated object. 
+The class template, `polymorphic_value`, confers value-like semantics on a 
+free-store (heap) allocated object. 
 
 A `polymorphic_value<T>` may hold an object of a class publicly derived from `T`, 
 and copying the `polymorphic_value<T>` will copy the object of the derived type.
@@ -409,52 +481,25 @@ access to the held object is possible.
 
 ---
 
-## `indirect_value`
+## Examples - `polymorphic_value`
 
-The class template, `indirect_value`, confers value-like semantics on a 
-free-store allocated object. 
-
-An `indirect_value<T>` may hold an object of class `T`, copying the 
-`indirect_value` will copy the object. 
-
-When `indirect_value` is accessed through a `const` access path, only 
-`const` access to the held object is possible.
-
----
-
-##  `indirect_value` interface
+We can use `polymorphic_value` in any context where we need a class to own
+open-set runtime-polymorphic data. For example:
 
 ```~cpp
-  template <class T>
-  class indirect_value {
-    ~indirect_value() = default;
+struct Animal {
+    virtual ~Animal();
+    virtual const char* MakeNoise() const = 0;
+};
 
-    // Some constructors omitted
+class Zoo {
+    std::vector<std::polymorphic_value<Animal>> animals_;
+    // ...
+}; 
+``` 
 
-    indirect_value(const indirect_value& p);
-    indirect_value(indirect_value&& p) noexcept;
-
-    indirect_value& operator=(const indirect_value& p);
-    indirect_value& operator=(indirect_value&& p) noexcept;
-
-    explicit operator bool() const;
-
-    const T* operator->() const;
-    const T& operator*() const;
-
-    T* operator->();
-    T& operator*();
-  };
-```
-
----
-
-## Implementing `indirect_value`
-
-Implementation of `indirect value` is relatively simple.
-
-The class contains a pointer-member, user-defined special member 
-functions and suitable `const`-qualified overloads for accessors.
+Compiler-generated special member functions will behave correctly and 
+`const` will propagate to each and every animal.
 
 ---
 
@@ -475,6 +520,9 @@ to perform correct copies of derived types.
 
 Type erasure uses a combination of generics and virtual dispatch
 to turn structural subtypes into an object hierarchy.
+
+Type erasure is used to implement `std::function`, `std::any` 
+and `std::shared_ptr` among other things.
 
 ```~cpp
 class TypeErasedWriter {
@@ -502,51 +550,6 @@ class TypeErasedWriter {
     void Write() { writer_.Write(); }
 };
 ```
-
----
-
-## Examples - `indirect_value`
-
-We can use `indirect_value` in any context where we need a class to own
-non-polymorphic data of incomplete type. For example:
-
-```~cpp
-class ForwardListNode {
-    int data_;
-    std::indirect_value<ForwardListNode> next_;
-}; 
-
-class ForwardList {
-    std::indirect_value<ForwardListNode> head_;
-public:
-    // ...
-};
-``` 
-
-Compiler-generated special member functions will behave correctly and 
-`const` will propagate to each and every node.
-
----
-
-## Examples - `polymorphic_value`
-
-We can use `polymorphic_value` in any context where we need a class to own
-open-set runtime-polymorphic data. For example:
-
-```~cpp
-struct Animal {
-    virtual ~Animal();
-    virtual const char* MakeNoise() const = 0;
-};
-
-class Zoo {
-    std::vector<std::polymorphic_value<Animal>> animals_;
-    // ...
-}; 
-``` 
-
-Compiler-generated special member functions will behave correctly and 
-`const` will propagate to each and every animal.
 
 ---
 
