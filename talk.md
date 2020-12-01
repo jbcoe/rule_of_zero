@@ -149,8 +149,8 @@ There are unavoidably some circumstances in which pointer members are needed.
 
 ## Node-like structures
 
-A tree or linked-list can be implemented as a node-based container. Nodes would 
-contain data and pointer(s) to other nodes so that the list or tree can be 
+A graph, tree or linked-list can be implemented as a node-based container. Nodes would 
+contain data and pointer(s) to other nodes so that the graph, tree or list can be 
 navigated
 
 ```~cpp
@@ -189,7 +189,7 @@ frequency of cache evictions.
 
 The handle-body idiom was used to keep compilation times down and will probably 
 see a resurgance in use as people struggle to continue to improve performance 
-while keeping ABI stable.
+while keeping the ABI stable.
 
 ```~cpp
 class Widget {
@@ -485,7 +485,7 @@ class TypeErasedWriter {
 
     template <class T>  
     // T needs a `Write` method but no base class.
-    struct GenericWriter{
+    struct GenericWriter : BaseWriter {
         T t_;
         GenericWriter(T&& t) : t_(std::move(t)) {}
         void Write(std::string_view s) override { t_.Write(); }
