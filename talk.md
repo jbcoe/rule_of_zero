@@ -1,5 +1,3 @@
-# Stop writing code, start solving problems
-
 ## Value semantics and the rule of zero in modern C++
 
 C++ has a rule of zero that suggests that users should not be writing 
