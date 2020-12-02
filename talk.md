@@ -555,7 +555,7 @@ class TypeErasedWriter {
     // T does not need to inherit from nor override functions from a particular base class.
     struct WriterImpl : BaseWriter {
         T t_;
-        GenericWriter(T&& t) : t_(std::forward<T>(t)) {}
+        WriterImpl(const T& t) : t_(t) {}
         void Write(std::string_view s) override { t_.Write(s); }
     }
     
@@ -563,8 +563,8 @@ class TypeErasedWriter {
  
  public:
     template <class T> 
-    TypeErasedWriter(T&& t) {
-        writer_ = new GenericWriter<T>(std::forward<T>(t));
+    TypeErasedWriter(const T& t) {
+        writer_ = new WriterImpl<T>(t);
     }
     
     void Write() { writer_.Write(); }
