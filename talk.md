@@ -549,7 +549,7 @@ class TypeErasedWriter {
     struct BaseWriter {
         virtual void Write(std::string_view s) = 0;
         virtual ~BaseWriter() = default;
-    }
+    };
 
     template <class T>  
     // T does not need to inherit from nor override functions from a particular base class.
@@ -557,7 +557,7 @@ class TypeErasedWriter {
         T t_;
         WriterImpl(const T& t) : t_(t) {}
         void Write(std::string_view s) override { t_.Write(s); }
-    }
+    };
     
     BaseWriter* writer_;
  
